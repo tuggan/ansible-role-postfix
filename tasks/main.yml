@@ -1,0 +1,31 @@
+---
+- name: Make sure postfix is installed.
+  ansible.builtin.package:
+    name: postfix
+    state: present
+
+- name: Apply Postfix templates
+  ansible.builtin.template:
+    dest: "{{ item.dest }}"
+    src: "{{ item.src }}"
+    mode: "{{ item.mode | default('0o644') }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+  when: postfix_templates is defined
+  loop: "{{ postfix_templates }}"
+  notify: Restart postfix
+
+- name: Apply transport template if any transport rule is defined
+  ansible.builtin.template:
+    src: "{{ postfix_transport_template }}"
+    dest: "{{ postfix_transport_file }}"
+    mode: "0o644"
+  when: postfix_transport is defined
+  notify: Built postmap
+
+
+- name: Make sure postfix is started and enabled at boot.
+  ansible.builtin.service:
+    name: postfix
+    state: "{{ postfix_service_state }}"
+    enabled: "{{ postfix_service_enabled }}"

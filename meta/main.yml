@@ -1,0 +1,16 @@
+galaxy_info:
+  author: Dennis Vesterlund
+  description: Install and configure postfix
+  role_name: postfix
+  namespace: tuggan
+
+  license: BSD-3-Clause
+
+  min_ansible_version: "2.10"
+
+  galaxy_tags:
+    - postfix
+    - mail
+    - mta
+
+dependencies: []

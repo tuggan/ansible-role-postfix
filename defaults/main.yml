@@ -1,0 +1,28 @@
+---
+postfix_config_file: /etc/postfix/main.cf
+postfix_templates:
+  - src: main.cf.j2
+    dest: "{{ postfix_config_file }}"
+
+postfix_service_state: started
+postfix_service_enabled: true
+
+postfix_inet_interfaces: localhost
+postfix_inet_protocols: all
+
+postfix_smtpd_banner: $myhostname ESMTP $mail_name
+
+postfix_mynetworks: 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+
+postfix_smtpd_tls_cert_file: /etc/ssl/certs/ssl-cert-snakeoil.pem
+postfix_smtpd_tls_key_file: /etc/ssl/private/ssl-cert-snakeoil.key
+postfix_smtpd_tls_security_level: may
+
+postfix_maillog_file: /var/log/postfix.log
+postfix_myhostname: "{{ inventory_hostname }}"
+
+postfix_transport_template: transport.j2
+postfix_transport_file: /etc/postfix/transport
+
+postfix_smtpd_relay_restrictions: permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+postfix_mydestination: $myhostname, localdomain, localhost, localhost.localdomain, localhost

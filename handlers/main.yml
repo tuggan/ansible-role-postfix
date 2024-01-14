@@ -1,0 +1,10 @@
+---
+- name: Restart postfix
+  ansible.builtin.service:
+    name: postfix
+    state: restarted
+
+- name: Build postmap
+  ansible.builtin.command: postmap {{ postfix_transport_file }}
+  notify: Restart postfix
+  changed_when: false
